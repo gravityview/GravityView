@@ -141,95 +141,108 @@ class GravityView_Render_Settings {
 		return $select_cap_choices;
 	}
 
-
 	/**
-	 * Render Field Options html (shown through a dialog box)
+	 * Render field and widget options HTML (customized and shown through a dialog box)
 	 *
-	 * @see GravityView_Ajax::get_field_options
-	 * @see GravityView_Admin_Views::render_active_areas
+	 * @see    GravityView_Ajax::get_field_options
+	 * @see    GravityView_Admin_Views::render_active_areas
 	 *
 	 * @access public
-	 * @param string $form_id
-	 * @param string $field_type field / widget
-	 * @param string $template_id
-	 * @param string $field_id
-	 * @param string $field_label
-	 * @param string $area
-	 * @param string $uniqid (default: '')
-	 * @param string $current (default: '')
-	 * @param string $context (default: 'single')
-	 * @param array $item Field or widget array that's being rendered
+	 *
+	 * @param  string $field_type Type of field options to render (`field` or `widget`)
+	 * @param  string $field_id   Field input type (textarea, list, select, search_bar, etc.) or widget ID
+	 * @param  array  $field_data Field options, such as id, type, name, etc. (default: array())
 	 *
 	 * @return string HTML of dialog box
 	 */
-	public static function render_field_options( $form_id, $field_type, $template_id, $field_id, $field_label, $area, $input_type = NULL, $uniqid = '', $current = '', $context = 'single', $item = array() ) {
+	public static function render_field_and_widget_options( $field_type, $field_id, $input_type, $context, $template_id, $field_data = array() ) {
 
-		if( empty( $uniqid ) ) {
-			//generate a unique field id
-			$uniqid = uniqid('', false);
-		}
+		// do not wrap settings HTML block in a template tag when field data is available
+		$template_tag = empty( $field_data );
+
+		// %shortcode% is replaced with data in the UI.
+		// See assets/js/admin-views.js@populateFieldAndWidgetTemplate method
+		$name_prefix = $field_type . 's' . '[__context__][__unique_id__]';
+
+		$field_name = ( 'widget' === $field_type ) ? $field_id : $input_type;
+
+		// build output
+		$output = ( $template_tag ) ? sprintf( '<div class="gv_%s_%s_options_template">', $field_type, $field_name ) : '';
+		$output .= '<input type="hidden" class="field-key" name="' . $name_prefix . '[id]" value="__field_id__">';
+		$output .= '<input type="hidden" class="field-label" name="' . $name_prefix . '[label]" value="__field_label__">';
+		$output .= '<input type="hidden" class="field-form-id" name="' . $name_prefix . '[form_id]" value="__form_id__">';
 
 		// get field/widget options
 		$options = self::get_default_field_options( $field_type, $template_id, $field_id, $context, $input_type );
-
-		// two different post arrays, depending of the field type
-		$name_prefix = $field_type .'s' .'['. $area .']['. $uniqid .']';
-
-		// build output
-		$output = '';
-		$output .= '<input type="hidden" class="field-key" name="'. $name_prefix .'[id]" value="'. esc_attr( $field_id ) .'">';
-		$output .= '<input type="hidden" class="field-label" name="'. $name_prefix .'[label]" value="'. esc_attr( $field_label ) .'">';
-		if ( $form_id ) {
-			$output .= '<input type="hidden" class="field-form-id" name="'. $name_prefix .'[form_id]" value="'. esc_attr( $form_id ) .'">';
-		}
-
-		// If there are no options, return what we got.
-		if(empty($options)) {
+		if ( empty( $options ) ) {
 
 			// This is here for checking if the output is empty in render_label()
 			$output .= '<!-- No Options -->';
 
+			// close template
+			if ( $template_tag ) {
+				$output .= '</div>';
+			}
+
 			return $output;
 		}
 
-		$output .= '<div class="gv-dialog-options" title="'. esc_attr( sprintf( __( 'Options: %s', 'gravityview' ) , strip_tags( html_entity_decode( $field_label ) ) ) ) .'">';
+		$output .= '<div class="gv-dialog-options" title="' . esc_attr( sprintf( __( 'Options: %s', 'gravityview' ), '__field_label__' ) ) . '">';
 
 		/**
 		 * @since 1.8
 		 */
-		if( !empty( $item['subtitle'] ) ) {
-			$output .= '<div class="subtitle">' . $item['subtitle'] . '</div>';
-		}
+		$output .= '<div style="display: none;" class="subtitle">%item_subtitle%</div>';
 
-		foreach( $options as $key => $option ) {
+		foreach ( $options as $key => $option ) {
 
-			$value = isset( $current[ $key ] ) ? $current[ $key ] : NULL;
+			$value = isset( $field_data[ $key ] ) ? $field_data[ $key ] : null;
 
-			$field_output = self::render_field_option( $name_prefix . '['. $key .']' , $option, $value);
+			$field_output = self::render_field_option( $name_prefix . '[' . $key . ']', $option, $value );
 
 			// The setting is empty
-			if( empty( $field_output ) ) {
+			if ( empty( $field_output ) ) {
 				continue;
 			}
 
-			switch( $option['type'] ) {
+			switch ( $option['type'] ) {
 				// Hide hidden fields
 				case 'hidden':
-					$output .= '<div class="gv-setting-container gv-setting-container-'. esc_attr( $key ) . ' screen-reader-text">'. $field_output . '</div>';
+					$output .= '<div class="gv-setting-container gv-setting-container-' . esc_attr( $key ) . ' screen-reader-text">' . $field_output . '</div>';
 					break;
 				default:
-					$output .= '<div class="gv-setting-container gv-setting-container-'. esc_attr( $key ) . '">'. $field_output .'</div>';
+					$output .= '<div class="gv-setting-container gv-setting-container-' . esc_attr( $key ) . '">' . $field_output . '</div>';
 			}
 		}
 
 		// close options window
 		$output .= '</div>';
 
+		// close template
+		if ( $template_tag ) {
+			$output .= '</div>';
+		}
+
 		return $output;
 
 	}
 
+	/**
+	 * @deprecated since 2.0.XX
+	 * @TODO: add proper version
+	 *
+	 * Start using GravityView_Render_Settings::get_default_field_and_widget_options
+	 *
+	 * @return string HTML of dialog box
+	 */
+	public static function render_field_options( $form_id, $field_type, $template_id, $field_id, $field_label, $area, $input_type = null, $uniqid = '', $field_data = array(), $context = 'single', $item = array() ) {
 
+		_deprecated_function( 'GravityView_Render_Settings::render_field_options', '2.X.00', 'GravityView_Render_Settings::render_field_and_widget_options' );
+
+		$field_name = ( 'widget' == $field_type ) ? $field_id : $input_type;
+
+		return self::render_field_and_widget_options( $field_type, $field_name, $template_id, $field_data );
+	}
 
 	/**
 	 * Handle rendering a field option form element
@@ -281,11 +294,6 @@ class GravityView_Render_Settings {
 
 		return $output;
 	}
-
-
-
-
-
 
 	/**
 	 * Output a table row for view settings

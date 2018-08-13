@@ -30,6 +30,8 @@
 
     			do_action('gravityview_render_field_pickers', 'directory' );
 
+                do_action('gravityview_render_field_and_widget_options', 'directory', $curr_template );
+
             ?>
 
 			<?php // list of available widgets to be shown in the popup ?>
@@ -62,7 +64,9 @@
 			</div>
             <?php
                 do_action('gravityview_render_field_pickers', 'single' );
-			?>
+
+                do_action('gravityview_render_field_and_widget_options', 'single', $curr_template );
+            ?>
 		</div>
 
 	</div> <?php // end single view tab ?>
@@ -81,6 +85,8 @@
 
 			<?php
 			    do_action('gravityview_render_field_pickers', 'edit' );
+
+			    do_action('gravityview_render_field_and_widget_options', 'edit', $curr_template );
 			?>
 
 		</div>

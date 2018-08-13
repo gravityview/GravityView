@@ -40,12 +40,10 @@ class GravityView_Admin_Views {
 		add_action( 'gravityview_render_directory_active_areas', array( $this, 'render_directory_active_areas'), 10, 4 );
 		add_action( 'gravityview_render_widgets_active_areas', array( $this, 'render_widgets_active_areas'), 10, 3 );
 		add_action( 'gravityview_render_field_pickers', array( $this, 'render_field_pickers') );
+		add_action( 'gravityview_render_field_and_widget_options', array( $this, 'render_field_and_widget_options'), 10, 2 );
 		add_action( 'gravityview_render_available_fields', array( $this, 'render_available_fields'), 10, 2 );
 		add_action( 'gravityview_render_available_widgets', array( $this, 'render_available_widgets') );
 		add_action( 'gravityview_render_active_areas', array( $this, 'render_active_areas'), 10, 5 );
-
-		// @todo check if this hook is needed..
-		//add_action( 'gravityview_render_field_options', array( $this, 'render_field_options'), 10, 9 );
 
 		// Add Connected Form column
 		add_filter('manage_gravityview_posts_columns' , array( $this, 'add_post_type_columns' ) );
@@ -616,7 +614,6 @@ class GravityView_Admin_Views {
 		$fields = $this->get_available_fields( $form, $context );
 
 		$output = '';
-
 		if( !empty( $fields ) ) {
 
 			foreach( $fields as $id => $details ) {
@@ -885,7 +882,6 @@ class GravityView_Admin_Views {
 				$available_items[ $form ] = $this->get_registered_widgets();
 			}
 		}
-
 		foreach( $rows as $row ) :
 			foreach( $row as $col => $areas ) :
 				$column = ($col == '2-2') ? '1-2' : $col; ?>
@@ -923,7 +919,7 @@ class GravityView_Admin_Views {
 										}
 
 										// Field options dialog box
-										$field_options = GravityView_Render_Settings::render_field_options( $form_id, $type, $template_id, $field['id'], $original_item['label'], $zone .'_'. $area['areaid'], $input_type, $uniqid, $field, $zone, $original_item );
+										$field_options = GravityView_Render_Settings::render_field_and_widget_options( $type, $field['id'], $input_type, $zone, $template_id, $field );
 
 										$item = array(
 											'input_type' => $input_type,
@@ -991,6 +987,54 @@ class GravityView_Admin_Views {
 		echo $output;
 
 		return $output;
+	}
+
+	/**
+	 * Renders field options templates
+	 *
+	 * @since 2.0.XX
+	 *
+	 * @return void
+	 */
+	function render_field_and_widget_options( $context = 'directory', $template_id ) {
+
+		// render GV widget templates
+		$widgets = \GV\Widget::registered();
+
+		foreach ( $widgets as $widget_id => $data ) {
+			echo GravityView_Render_Settings::render_field_and_widget_options( 'widget', $widget_id, null, $context, $template_id );
+		}
+
+		// render GF field templates
+		$forms = gravityview_get_forms( 'any' );
+
+		foreach ( $forms as $form ) {
+			foreach ( $form['fields'] as $field ) {
+				$fields[] = $field['type'];
+			}
+		}
+
+		foreach ( array_unique( $fields ) as $input_type ) {
+			echo GravityView_Render_Settings::render_field_and_widget_options( 'field', null, $input_type, $context, $template_id );
+		}
+
+		// render GV fields templates
+		foreach ( GravityView_Fields::get_all() as $field ) {
+			echo GravityView_Render_Settings::render_field_and_widget_options( 'field', null, $field->name, $context, $template_id );
+		}
+
+		// render GV virtual and default field templates
+		$fields = array(
+			'edit_link',
+			'delete_link',
+			'entry_map',
+            'default_field' // this will be used for all fields/widget that don't have their own templates
+		);
+
+		foreach ( $fields as $input_type ) {
+			echo GravityView_Render_Settings::render_field_and_widget_options( 'field', null, $input_type, $context, $template_id );
+		}
+
 	}
 
 	/**

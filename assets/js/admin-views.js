@@ -328,6 +328,8 @@
 
 			vcfg.zebraStripeSettings();
 
+			vcfg.initializeFieldAndWidgetSettings();
+
 		},
 
 		/**
@@ -1089,77 +1091,50 @@
 
 			var newField = clicked.clone().hide();
 			var areaId = clicked.parents( '.ui-tooltip' ).attr( 'id' );
-			var templateId = $( "#gravityview_directory_template" ).val();
+			var templateId = $( '#gravityview_directory_template' ).val();
 			var tooltipId = clicked.parents( '.ui-tooltip' ).attr( 'id' );
 			var addButton = $( 'a.gv-add-field[data-tooltip-id="' + tooltipId + '"]' );
 
 			var data = {
-				action: 'gv_field_options',
-				template: templateId,
-				area: addButton.attr( 'data-areaid' ),
-				context: addButton.attr( 'data-context' ),
-				field_id: newField.attr( 'data-fieldid' ),
-				field_label: newField.find( '.gv-field-label' ).attr( 'data-original-title' ),
-				field_type: addButton.attr( 'data-objecttype' ),
-				input_type: newField.attr( 'data-inputtype' ),
-				form_id: parseInt($(clicked).attr( 'data-formid' ), 10) || vcfg.currentFormId,
-				nonce: gvGlobals.nonce
+				context: addButton.attr( 'data-areaid' ),
+				fieldId: newField.attr( 'data-fieldid' ),
+				fieldLabel: newField.find( '.gv-field-label' ).attr( 'data-original-title' ),
+				fieldTitle: newField.find( '.gv-field-label' ).attr( 'title' ),
+				formId: parseInt( $( clicked ).attr( 'data-formid' ), 10 ) || vcfg.currentFormId,
 			};
 
-			// Get the HTML for the Options <div>
-			// - If there are no options, response will NULL
-			// - If response is false, it means the request was invalid.
-			$.ajax( {
-				type: "POST",
-				url: ajaxurl,
-				data: data,
-				async: true,
-				beforeSend: function () {
-					// Don't allow saving until this is done.
-					vcfg.disable_publish();
-				},
-				complete: function () {
-					// Enable saving after it's done
-					vcfg.enable_publish();
-				}
-			} ).done( function ( response ) {
+			var fieldType = addButton.attr( 'data-objecttype' );
+			var fieldName = (fieldType === 'widget') ? data.fieldId : newField.attr( 'data-inputtype' );
 
-				// Add in the Options <div>
-				newField.append( response );
+			$template = $( '.gv_' + fieldType + '_' + fieldName + '_options_template' );
 
-				// If there are field options, show the settings gear.
-				if ( $( '.gv-dialog-options', newField ).length > 0 ) {
-					$( '.dashicons-admin-generic', newField ).removeClass( 'hide-if-js' );
-				}
+			// When a field does not have a template, use a default one
+			if ( !$template.length ) {
+				$template = $( '.gv_' + fieldType + '_default_field_options_template' );
+			}
 
-				// append the new field to the active drop
-				$( 'a[data-tooltip-id="' + areaId + '"]' ).parents( '.gv-droppable-area' ).find( '.active-drop' ).append( newField ).end().attr( 'data-tooltip-id', '' );
+			// Add field/widget settings
+			newField.append( vcfg.populateFieldAndWidgetTemplate( $template.html(), data ) );
 
-				$('body').trigger( 'gravityview/field-added', newField );
+			// If there are field options, show the settings gear.
+			if ( $( '.gv-dialog-options', newField ).length > 0 ) {
+				$( '.dashicons-admin-generic', newField ).removeClass( 'hide-if-js' );
+			}
 
-				// Show the new field
-				newField.fadeIn( 100, function () {
-					vcfg.refresh_merge_tags();
-				} );
+			// append the new field to the active drop
+			$( 'a[data-tooltip-id="' + areaId + '"]' ).parents( '.gv-droppable-area' ).find( '.active-drop' ).append( newField ).end().attr( 'data-tooltip-id', '' );
 
-				// refresh the little help tooltips
-				vcfg.refreshGFtooltips();
+			$( 'body' ).trigger( 'gravityview/field-added', newField );
 
-			} ).fail( function ( jqXHR ) {
-
-				// Enable publish on error
-				vcfg.enable_publish();
-
-				// Something went wrong
-				alert( gvGlobals.field_loaderror );
-
-				console.log( jqXHR );
-
-			} ).always( function () {
-
-				vcfg.toggleDropMessage();
-
+			// Show the new field
+			newField.fadeIn( 100, function () {
+				vcfg.refresh_merge_tags();
 			} );
+
+			// refresh the little help tooltips
+			vcfg.refreshGFtooltips();
+
+			vcfg.toggleDropMessage();
 
 		},
 
@@ -1574,10 +1549,61 @@
 			} );
 
 			return false;
-		}
+		},
+
+		/**
+		 * Adds settings data to fields and widgets that will be displayed in dialogue box
+		 */
+		initializeFieldAndWidgetSettings: function () {
+			var vcfg = viewConfiguration;
+
+			$( '.active-drop' ).find( '.gv-fields' ).each( function ( e ) {
+				var data = {
+					context: $( this ).parent().attr( 'data-areaid' ),
+					fieldId: $( this ).attr( 'data-fieldid' ),
+					fieldLabel: $( this ).find( '.gv-field-label' ).attr( 'data-original-title' ),
+					formId: $( this ).attr( 'data-formid' ) || vcfg.currentFormId,
+				};
+
+				$( this ).find( 'a[href="#settings"]' ).removeClass( 'hide-if-js' );
+				$( this ).html( vcfg.populateFieldAndWidgetTemplate( $( this ).html(), data ) );
+
+			} );
+		},
+
+		/**
+		 * Populates template by replacing shortcodes with data
+		 *
+		 * @param {string} template HTML with shortcodes
+		 * @param {object} data Shortcodes data to be replaced
+		 * @returns string|void HTML string with replaced shortcodes
+		 */
+		populateFieldAndWidgetTemplate: function ( template, data ) {
+			if ( !template || !$.isPlainObject( data ) ) {
+				return;
+			}
+
+			var vcfg = viewConfiguration,
+				uniqueId = vcfg.generateUniqueId();
+
+			return template
+				.replace( new RegExp( '__context__', 'gm' ), data.context || '__context__' )
+				.replace( new RegExp( '__field_id__', 'gm' ), data.fieldId || '__field_id__' )
+				.replace( new RegExp( '__field_label__', 'gm' ), data.fieldLabel || '__field_label__' )
+				.replace( new RegExp( '__form_id__', 'gm' ), data.formId || '__form_id__' )
+				.replace( new RegExp( '__unique_id__', 'gm' ), uniqueId );
+		},
+
+		/**
+		 * Generates unique ID (random string)
+		 *
+		 * @returns {string} Random string
+		 */
+		generateUniqueId: function () {
+			return Math.random().toString(36).substr(2, 9);
+		},
 
 	}; // end viewConfiguration object
-
 
 	/**
 	 * Manages the General View Settings
