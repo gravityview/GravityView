@@ -1178,7 +1178,7 @@ class GravityView_Edit_Entry_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'show_only_approved' => true,
 				'user_edit' => true,
@@ -1682,7 +1682,7 @@ class GravityView_Edit_Entry_Test extends GV_UnitTestCase {
 
 		$view = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'show_only_approved' => true,
 				'user_edit' => true,
@@ -1759,7 +1759,7 @@ class GravityView_Edit_Entry_Test extends GV_UnitTestCase {
 
 		$view = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'user_edit' => true,
 			),
@@ -1805,7 +1805,7 @@ class GravityView_Edit_Entry_Test extends GV_UnitTestCase {
 
 		$view = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'user_edit' => true,
 			),
@@ -1852,7 +1852,7 @@ class GravityView_Edit_Entry_Test extends GV_UnitTestCase {
 
 		$view = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'show_only_approved' => true,
 				'user_edit' => true,
@@ -1907,7 +1907,7 @@ class GravityView_Edit_Entry_Test extends GV_UnitTestCase {
 
 		$view = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'user_edit' => true,
 			),
@@ -2003,7 +2003,7 @@ class GravityView_Edit_Entry_Test extends GV_UnitTestCase {
 
 		$view = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'user_edit' => true,
 			),
@@ -2170,7 +2170,7 @@ class GravityView_Edit_Entry_Test extends GV_UnitTestCase {
 
 		$view = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'user_edit' => true,
 			),
@@ -2224,7 +2224,7 @@ class GravityView_Edit_Entry_Test extends GV_UnitTestCase {
 
 		$view = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'user_edit' => true,
 			),

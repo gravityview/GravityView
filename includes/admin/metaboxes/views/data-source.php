@@ -31,19 +31,20 @@ do_action( 'gravityview/metaboxes/data-source/before', $current_form, $forms );
 <p>
 	<?php
 
-	if ( empty( $current_form ) && GVCommon::has_cap( 'gravityforms_create_form' ) ) {
-		?>
-		<a class="button button-primary" href="#gv_start_fresh" title="<?php esc_attr_e( 'Use a Form Preset', 'gravityview' ); ?>"><?php esc_html_e( 'Use a Form Preset', 'gravityview' ); ?></a>
-
-		<?php if( !empty( $forms ) ) { ?>
-			<span>&nbsp;<?php esc_html_e( 'or use an existing form', 'gravityview' ); ?>&nbsp;</span>
-		<?php }
-	}
-
 	// If there are no forms to select, show no forms.
 	if( !empty( $forms ) ) { ?>
 		<select name="gravityview_form_id" id="gravityview_form_id">
-			<option value="" <?php selected( '', $current_form, true ); ?>>&mdash; <?php esc_html_e( 'list of forms', 'gravityview' ); ?> &mdash;</option>
+			<?php
+				if ( isset( $_GET['preset'] ) ) {
+					?>
+						<option value="" <?php selected( '', $current_form, true ); ?>>&mdash; <?php esc_html_e( 'a new form', 'gravityview' ); ?> &mdash;</option>
+					<?php
+				} else {
+					?>
+						<option value="" <?php selected( '', $current_form, true ); ?>>&mdash; <?php esc_html_e( 'list of forms', 'gravityview' ); ?> &mdash;</option>
+					<?php
+				}
+			?>
 			<?php foreach( $forms as $form ) { ?>
 				<option value="<?php echo $form['id']; ?>" <?php selected( $form['id'], $current_form, true ); ?>><?php echo esc_html( $form['title'] ); ?></option>
 			<?php } ?>

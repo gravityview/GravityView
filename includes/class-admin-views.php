@@ -895,11 +895,7 @@ class GravityView_Admin_Views {
 		// if saved values, get available fields to label everyone
 		if( !empty( $values ) && ( !empty( $post->ID ) || !empty( $_POST['template_id'] ) ) ) {
 
-			if( !empty( $_POST['template_id'] ) ) {
-				$form = GravityView_Ajax::pre_get_form_fields( $_POST['template_id'] );
-			} else {
-				$form_id = $form = gravityview_get_form_id( $post->ID );
-			}
+			$form_id = $form = gravityview_get_form_id( $post->ID );
 
 			if ( 'field' === $type ) {
 				$available_items[ $form ] = $this->get_available_fields( $form, $zone );
@@ -1114,7 +1110,7 @@ class GravityView_Admin_Views {
 	 * Render the Template Active Areas and configured active fields for a given template id and post id
 	 *
 	 * @access public
-	 * @param string $template_id (default: '') Template ID, like `default_list`, `default_table`, `preset_business_data`, etc. {@see GravityView_Template::__construct()}
+	 * @param string $template_id (default: '') Template ID, like `default_list`, `default_table`, etc. {@see GravityView_Template::__construct()}
 	 * @param string $post_id (default: '')
 	 * @param string $context (default: 'single')
 	 * @return string HTML of the active areas
@@ -1129,7 +1125,7 @@ class GravityView_Admin_Views {
 		 * @filter `gravityview_template_active_areas`
 		 * @see GravityView_Template::assign_active_areas()
 		 * @param array $template_areas Empty array, to be filled in by the template class
-		 * @param string $template_id Template ID, like `default_list`, `default_table`, `preset_business_data`, etc. {@see GravityView_Template::__construct()}
+		 * @param string $template_id Template ID, like `default_list`, `default_table`, etc. {@see GravityView_Template::__construct()}
 		 * @param string $context Current View context: `directory`, `single`, or `edit` (default: 'single')
 		 */
 		$template_areas = apply_filters( 'gravityview_template_active_areas', array(), $template_id, $context );

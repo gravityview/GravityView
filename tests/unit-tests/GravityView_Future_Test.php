@@ -1657,7 +1657,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
         $post = $this->factory->view->create_and_get( array(
             'form_id' => $form['id'],
-            'template_id' => 'table',
+            'template_id' => 'default_table',
             'fields' => array(
                 'directory_table-columns' => array(
                     wp_generate_password( 4, false ) => array(
@@ -1773,7 +1773,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'fields' => array(
 				'directory_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -1993,7 +1993,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'preset_business_listings',
+			'template_id' => 'default_list',
 			'fields' => array(
 				'directory_list-title' => array(
 					wp_generate_password( 4, false ) => array(
@@ -2160,7 +2160,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'fields' => array(
 				'directory_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -2235,7 +2235,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 		) );
 		$view = \GV\View::from_post( $post );
 
@@ -2267,7 +2267,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'fields' => array(
 				'single_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -2345,7 +2345,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'fields' => array(
 				'single_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -2403,7 +2403,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'preset_business_listings',
+			'template_id' => 'default_list',
 		) );
 		$view = \GV\View::from_post( $post );
 
@@ -2436,7 +2436,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'preset_business_listings',
+			'template_id' => 'default_list',
 			'fields' => array(
 				'single_list-title' => array(
 					wp_generate_password( 4, false ) => array(
@@ -5155,7 +5155,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'page_size' => 33,
 			),
@@ -5273,7 +5273,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'fields' => array(
 				'single_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -5401,7 +5401,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 		) );
 		$view = \GV\View::from_post( $post );
 
@@ -5457,7 +5457,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 		) );
 		$view = \GV\View::from_post( $post );
 		$view->settings->update( array( 'show_only_approved' => true ) );
@@ -5521,7 +5521,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'show_only_approved' => true,
 			),
@@ -5684,7 +5684,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'show_only_approved' => true,
 			),
@@ -6088,7 +6088,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( $config = array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'fields' => array(
 				'directory_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -6151,7 +6151,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'fields' => array(
 				'directory_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -6406,7 +6406,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'fields' => array(
 				'single_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -6596,7 +6596,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'preset_business_listings',
+			'template_id' => 'default_list',
 			'fields' => array(
 				$mode . '_list-title' => array(
 					wp_generate_password( 4, false ) => array(
@@ -7013,7 +7013,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'hide_empty' => false,
 			),
@@ -7085,7 +7085,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'preset_business_listings',
+			'template_id' => 'default_list',
 			'settings' => array(
 				'hide_empty' => false,
 			),
@@ -7193,7 +7193,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'hide_empty' => false,
 			),
@@ -7314,7 +7314,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form->ID,
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 		) );
 		$view = \GV\View::from_post( $post );
 
@@ -7439,7 +7439,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form->ID,
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'sort_field' => array( 16, 4 ),
 				'sort_direction' => array( \GV\Entry_Sort::ASC, \GV\Entry_Sort::DESC ),
@@ -7505,7 +7505,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'fields' => array(
 				'single_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -7525,7 +7525,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'fields' => array(
 				'single_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -7602,7 +7602,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form->ID,
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'sort_field' => array( '17' ),
 				'sort_direction' => array( \GV\Entry_Sort::ASC ),
@@ -7659,7 +7659,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form->ID,
-			'template_id' => 'table',
+			'template_id' => 'default_table',
             'fields' => array(
 				'directory_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -7741,7 +7741,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form->ID,
-			'template_id' => 'table',
+			'template_id' => 'default_table',
             'fields' => array(
 				'directory_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -7801,7 +7801,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form->ID,
-			'template_id' => 'table',
+			'template_id' => 'default_table',
             'fields' => array(
 				'directory_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -7862,7 +7862,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 			'settings' => array(
 				'csv_enable' => '1',
 			),
-			'template_id' => 'table',
+			'template_id' => 'default_table',
             'fields' => array(
 				'directory_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -7997,7 +7997,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 			'settings' => array(
 				'csv_enable' => '1',
 			),
-			'template_id' => 'table',
+			'template_id' => 'default_table',
             'fields' => array(
 				'directory_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -8051,7 +8051,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 				'csv_enable' => '1',
 				'page_size'  => '3',
 			),
-			'template_id' => 'table',
+			'template_id' => 'default_table',
             'fields' => array(
 				'directory_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -8108,7 +8108,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'fields' => array(
 				'single_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -8257,7 +8257,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
             'fields' => array(
 				'directory_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -8310,7 +8310,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form['id'],
-			'template_id' => 'table',
+			'template_id' => 'default_table',
 			'settings' => array(
 				'page_size'  => '25',
 			),
@@ -8536,7 +8536,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form->ID,
-			'template_id' => 'table',
+			'template_id' => 'default_table',
             'fields' => array(
 				'directory_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
@@ -8613,7 +8613,7 @@ class GVFuture_Test extends GV_UnitTestCase {
 
 		$post = $this->factory->view->create_and_get( array(
 			'form_id' => $form->ID,
-			'template_id' => 'table',
+			'template_id' => 'default_table',
             'fields' => array(
 				'directory_table-columns' => array(
 					wp_generate_password( 4, false ) => array(
