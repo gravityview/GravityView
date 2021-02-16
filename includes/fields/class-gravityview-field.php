@@ -418,6 +418,12 @@ abstract class GravityView_Field {
 				'label' => __( 'Open link in a new tab or window?', 'gravityview' ),
 				'value' => false,
 			),
+			'is_numeric' => array(
+				'type'  => 'checkbox',
+				'label' => __( 'This content is numeric', 'gravityview' ),
+				'desc'  => __( 'Treat field values as numbers when sorting. By default, this field will be sorted alphabetically.', 'gravityview' ),
+				'value' => false,
+			),
 		);
 
 		/**
@@ -427,7 +433,7 @@ abstract class GravityView_Field {
 		return apply_filters( 'gravityview_field_support_options', $options );
 	}
 
-	function add_field_support( $key = '', &$field_options ) {
+	function add_field_support( $key, &$field_options ) {
 
 		$options = $this->field_support_options();
 

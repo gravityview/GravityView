@@ -19,7 +19,7 @@ class GravityView_Field_Custom extends GravityView_Field {
 	 * @var bool
 	 * @since 1.15.3
 	 */
-	var $is_sortable = false;
+	var $is_sortable = true;
 
 	/**
 	 * @var bool
@@ -37,9 +37,21 @@ class GravityView_Field_Custom extends GravityView_Field {
 
 		add_filter( 'gravityview/edit_entry/form_fields', array( $this, 'show_field_in_edit_entry' ), 10, 4 );
 
+		add_filter( 'gravityview/view/add_filtersorts', array( $this, 'add_filtersorts' ), 10, 2 );
+
+		/**
+		 * @filter `gravityview/fields/custom/sortable` Whether the custom content field should be sortable or not.
+		 * @param bool $sortable
+		 */
+		$this->is_sortable = apply_filters( 'gravityview/fields/custom/sortable', $this->is_sortable );
+
 		parent::__construct();
 	}
 
+	/**
+	 * @inheritDoc
+	 * @since 2.9.1 Added "This content is numeric" setting
+	 */
 	public function field_options( $field_options, $template_id, $field_id, $context, $input_type, $form_id ) {
 
 		unset ( $field_options['search_filter'], $field_options['show_as_link'], $field_options['new_window'] );
@@ -75,6 +87,8 @@ class GravityView_Field_Custom extends GravityView_Field {
 				'value' => '',
 			),
 		);
+
+		$this->add_field_support( 'is_numeric', $new_fields );
 
 		if ( 'edit' === $context ) {
 			unset( $field_options['custom_label'], $field_options['show_label'], $field_options['allow_edit_cap'], $new_fields['wpautop'], $new_fields['oembed'] );
@@ -140,6 +154,87 @@ class GravityView_Field_Custom extends GravityView_Field {
 		}
 
 		return $new_fields;
+	}
+
+	/**
+	 * Sort by custom content field if required!
+	 *
+	 * @param \GV\View $view The view.
+	 * @param \GV\Request $request The request.
+	 *
+	 * @return void
+	 */
+	public function add_filtersorts( $view, $request ) {
+		if ( ! $view->fields->by_type( 'custom' )->count() ) {
+			return; // No sorts.
+		}
+
+		$sorts = \GV\Utils::_GET( 'sort' );
+
+		if ( ! $sorts ) {
+
+			$sort_field = $view->settings->get( 'sort_field' );
+
+			if ( empty( $sort_field ) ) {
+				return; // Default sorting may be empty string
+			}
+
+			$sorts = array_combine( (array) $view->settings->get( 'sort_field' ), (array) $view->settings->get( 'sort_direction' ) );
+		}
+
+		if ( empty( $sorts ) || ! is_array( $sorts ) ) {
+			return; // Sanity check
+		}
+
+		if ( strpos( implode( ':', array_keys( $sorts ) ), 'custom_' ) === false ) {
+			return; // No custom sorts here.
+		}
+
+		add_filter( 'gravityview/entries/sort', $callback = function( $compare, $entry1, $entry2, $view, $request ) use ( $sorts ) {
+			/**
+			 * We'll actually need to sort everything on the PHP side now.
+			 * This is weird...
+			 */
+			$renderer = new \GV\Field_Renderer();
+
+			foreach ( $sorts as $key => $direction ) {
+				if ( strpos( $key, 'custom_' ) === 0 ) {
+					$field = $view->fields->get( str_replace( 'custom_', '', $key ) );
+				} else {
+					$field  = is_numeric( $key ) ? \GV\GF_Field::by_id( $view->form, $key ) : \GV\Internal_Field::by_id( $key );
+				}
+
+				$source = is_numeric( $key ) ? $view->form : new \GV\Internal_Source();
+
+				$value1 = $renderer->render( $field, $view, $source, $entry1, $request );
+				$value2 = $renderer->render( $field, $view, $source, $entry2, $request );
+
+				if ( $value1 === $value2 ) {
+					continue;
+				}
+
+				if ( $field->is_numeric ) { // @todo do we not have a filter that controls sorting?
+					if ( is_numeric( $value1 ) ) {
+						$value1 = floatval( $value1 );
+					}
+
+					if ( is_numeric( $value2 ) ) {
+						$value2 = floatval( $value2 );
+					}
+
+					return strnatcmp( $value1, $value2 ) * ( ( strtolower( $direction ) == 'desc' ) ? -1 : 1 );
+				} else {
+					return strcmp( $value1, $value2 ) * ( ( strtolower( $direction ) == 'desc' ) ? -1 : 1 );
+				}
+
+			}
+
+			return 0; // They're the same.
+		}, 10, 5 );
+
+		add_action( 'gravityview/view/remove_filtersorts', function() use ( $callback ) {
+			remove_action( 'gravityview/entries/sort', $callback );
+		} );
 	}
 
 }
